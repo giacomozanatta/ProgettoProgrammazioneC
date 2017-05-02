@@ -1,0 +1,21 @@
+{
+    "version": "0.1.0",
+    "command": "gcc",
+    "isShellCommand": true,
+    "args": [],
+    "showOutput": "always",
+    "echoCommand": true,
+    "suppressTaskName": true,
+    "tasks": [
+        {
+            "taskName": "generateout",
+            "args": ["-g", "campominato.c"]
+        },
+        {
+
+            "taskName": "compile",
+            "isBuildCommand": true,
+            "args": ["-o", "campominato", "campominato.c"]
+        }
+    ]
+}
