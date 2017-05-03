@@ -13,5 +13,6 @@ struct gioco {
 typedef struct gioco gioco;
 
 int new_gioco(gioco * game, int righe, int colonne, int bombe);
-
+void stampa_gioco(gioco game);
+void stampa_gioco_scoperto(gioco game);
 #endif

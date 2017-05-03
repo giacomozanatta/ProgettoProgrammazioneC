@@ -69,7 +69,6 @@ int crea_campo_vuoto(matrice* campo, int righe, int colonne){
 int genera_campo(matrice* campo, int righe, int colonne, int bombe){
     if(crea_campo_vuoto(campo, righe, colonne)==1)
        return 2; /*errore malloc*/
-	crea_campo_vuoto(campo, righe, colonne);
     if(bombe>=righe*colonne)
             return 1; /*troppe bombe*/
     inserisci_bombe(campo, righe, colonne, bombe);
@@ -111,6 +110,8 @@ void stampa_campo(matrice campo, int righe, int colonne){
 			printf("\n\t");
 	}
 }
+
+
 void scopri_cella_aux(matrice* campo, int righe, int colonne, int x, int y, int* celle_scoperte){
 	int i, j;
 	printf("%d, %d", (*campo)[x][y].scoperta, (*campo)[x][y].marcata);
