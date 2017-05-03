@@ -1,6 +1,7 @@
 #include "lib/campo.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/listcoord.h"
 #define KBLU  "\x1B[34m"
 #define KGRN  "\x1B[32m"
 #define KRED  "\x1B[31m"
@@ -19,7 +20,23 @@ void aggiorna_post_inserimento_bomba(matrice* campo, int righe, int colonne,int 
 						(*campo)[i][j].value++;
 		}
 }
-
+void salva_e_inserisci_bombe(matrice* campo, int righe, int colonne, int bombe, coordpila* coord_bombe){
+	printf("\n\tINSERISCO BOMBA...");
+	if(bombe>0){
+        int x, y;
+		do{
+			/*creo due numeri casuali, x e y...*/
+			x = rand() % (righe);
+			y = rand() % (colonne);
+		}while((*campo)[x][y].value==-1);
+		/*ho beccato una cella che non contiene una bomba... aggiorno celle limitrofe*/
+		(*campo)[x][y].value = -1;
+		inserisci_in_testa(coord_bombe, x, y);
+		aggiorna_post_inserimento_bomba(campo, righe, colonne, x, y);
+		printf("\tDONE.");
+		salva_e_inserisci_bombe(campo, righe, colonne, bombe-1, coord_bombe);
+	}
+}
 void inserisci_bombe(matrice* campo, int righe, int colonne, int bombe){
 	printf("\n\tINSERISCO BOMBA...");
 	if(bombe>0){

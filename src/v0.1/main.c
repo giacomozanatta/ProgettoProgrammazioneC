@@ -11,9 +11,10 @@ int menu_1(){
 	}while(scelta > 2 && scelta < 1);
 	return scelta;
 }
+
 int main(){
     gioco game;
-    int scelta;
+    int scelta, scelta1;
     int righe, colonne, bombe;
     scelta = menu_1();
 	switch(scelta){
@@ -28,6 +29,18 @@ int main(){
 			printf("\n\tGENERO CAMPO....");
 			new_gioco(&game, righe, colonne, bombe);
 			printf("\n\n");
+            do{
+                printf("\n\tCOSA VUOI FARE ADESSO?");
+                printf("\n\t1. SCRIVI CAMPO GENERATO SU FILE");
+                printf("\n\t2. GIOCA!");
+                printf("\n\t3. ESCI");
+                scanf("%d", %scelta1);
+            }while(scelta1<1 && scelta1>3);
+            switch(scelta1){
+                case 1:
+                    scrivi_su_file(game->
+                break;
+            }
 			stampa_gioco(game);
             stampa_gioco_scoperto(game);
 		break;
