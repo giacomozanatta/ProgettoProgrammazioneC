@@ -18,7 +18,7 @@ typedef cella* riga;
 typedef riga* matrice; /*mi capisco meglio matrice == cella**/
 
 /*INIZIALIZZA CAMPO VUOTO -> inizializza una matrice di celle*/
-void inizializza_campo_vuoto(matrice* campo, int righe, int colonne){
+void inizializza_campo(matrice* campo, int righe, int colonne){
 	matrice campoDe;
 	campoDe = *campo;
 	printf("\nINIZIALIZZO CAMPO VUOTO!");
@@ -47,7 +47,7 @@ int crea_campo_vuoto(cella*** campo, int righe, int colonne){
 			return 1; /*errore*/
 	}
 	printf("\nOK.");
-	inizializza_campo_vuoto(campo, righe, colonne);
+	inizializza_campo(campo, righe, colonne);
 	return 0; /*eseguito correttamente.*/
 }
 
@@ -126,12 +126,13 @@ int marca_cella(matrice* campo, int righe, int colonne, int rig, int col){
 		return 1; /*cella già scoperta*/
 }
 
-void scopri_cella_aux(matrice* campo, int righe, int colonne, int rig, int col){
+void scopri_cella_aux(matrice* campo, int righe, int colonne, int rig, int col, int *celle_scoperte){
 	int i, j;
 	matrice campoDe = *campo;
 	printf("%d, %d", campoDe[rig][col].scoperta, campoDe[rig][col].marcata);
 	if(campoDe[rig][col].scoperta==0 && campoDe[rig][col].marcata == 0){ /*se non l'ho già scoperta...*/
 		campoDe[rig][col].scoperta=1; /*scopro.*/
+		*celle_scoperte++;
 		if(campoDe[rig][col].value==0){ /*se è nulla, allora */
 			for(i = rig-1; i<=rig+1; i++)
 				for(j = col-1; j<=col+1; j++){
