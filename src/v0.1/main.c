@@ -36,6 +36,7 @@ int main(){
                 printf("\n\t1. SCRIVI CAMPO GENERATO SU FILE");
                 printf("\n\t2. GIOCA!");
                 printf("\n\t3. ESCI");
+				printf("\n");
                 scanf("%d", &scelta1);
             }while(scelta1<1 && scelta1>3);
             switch(scelta1){
@@ -48,8 +49,9 @@ int main(){
 							stampa_gioco(game);
 							printf("\n\t1. FAI MOSSA!");
 							printf("\n\t2. ANNULLA MOSSA!");
-							printf("\n\t3. MARCA CELLA!");
+							printf("\n\t3. MARCA/SMARCA CELLA!");
 							printf("\n\t4. ESCI :(");
+							printf("\n");
 							scanf("%d", &scelta2);
 						}while(scelta2<1 && scelta2>3);
 						switch(scelta2){
