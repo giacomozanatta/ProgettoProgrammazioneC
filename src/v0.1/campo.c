@@ -134,10 +134,10 @@ void scopri_cella_aux(matrice* campo, int righe, int colonne, int x, int y, int*
 	printf("%d, %d", (*campo)[x][y].scoperta, (*campo)[x][y].marcata);
 	if((*campo)[x][y].scoperta==0 && (*campo)[x][y].marcata == 0){ /*se non l'ho già scoperta...*/
 		(*campo)[x][y].scoperta=1; /*scopro.*/
-        celle_scoperte++;
+        (*celle_scoperte)++;
 		if((*campo)[x][y].value==0){ /*se è nulla, allora */
-			for(i = x-1; i<=x+1; x++)
-				for(j = y-1; j<=y+1; y++){
+			for(i = x-1; i<=x+1; i++)
+				for(j = y-1; j<=y+1; j++){
 					printf("\n%d, %d\n", i,j);
 						/*controllo se sono posizioni corrette [DA OTTIMIZZARE]*/
 						if(i>=0 && i<righe && j>=0 && j<colonne)
@@ -163,16 +163,17 @@ int scopri_cella(matrice* campo, int righe, int colonne, int x, int y, int* cell
 	}
 		/*se non è scoperta*/
 	else if((*campo)[x][y].marcata == 1){
-		return 0;
+		return -1;
 	}
 	else if((*campo)[x][y].value == -1){
 		printf("\n\t[GAME OVER] bomba!\n");
 		(*campo)[x][y].scoperta=1;
         (*celle_scoperte)++;
         /*DA FARE: GESTIONE LISTA ULTIME MOSSE*/
-		return 1;
+		return -2;
 	}
 	else
 		scopri_cella_aux(campo, righe, colonne, x, y, celle_scoperte);
-		return 0;
+		printf("TORNO 1...");
+		return 1;
 }

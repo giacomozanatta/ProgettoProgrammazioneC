@@ -15,4 +15,6 @@ typedef struct gioco gioco;
 int new_gioco(gioco * game, int righe, int colonne, int bombe);
 void stampa_gioco(gioco game);
 void stampa_gioco_scoperto(gioco game);
+int fai_mossa(gioco* game);
+void marca(gioco* game);
 #endif

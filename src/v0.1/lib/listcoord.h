@@ -12,5 +12,5 @@ typedef struct coordpila* coordpila;
 
 void inserisci_in_testa(coordpila* pila, int x, int y);
 
-elem preleva_in_testa(coordpila* pila);
+int preleva_in_testa(coordpila* pila, elem* el);
 
