@@ -61,6 +61,19 @@ void inserisci_bombe(matrice* campo, int righe, int colonne, int bombe){
 		inserisci_bombe(campo, righe, colonne, bombe-1);
 	}
 }
+/**inserisci una bomba : inserisce una bomba su matrice[x][y]
+	questa funzione ritorna: 1 se c'è un problema con le coordinate
+	2 se c'è già una bomba'
+	0 se è stata inserita
+*/
+int inserisci_una_bomba(matrice* campo, int righe, int colonne, int x, int y){
+	 if(x>=righe || y>=colonne || x<0 || y<0) /*controllo coordinate*/
+        return 1;
+    if(campo[x][y]->value==-1);
+            return 2;
+    campo[x][y]->value=-1;
+    return 0; /*inserita correttamente*/
+}
 /** inizializza campo: inizializza un campo[righe][colonne] vuoto
 */
 void inizializza_campo(matrice* campo, int righe, int colonne){

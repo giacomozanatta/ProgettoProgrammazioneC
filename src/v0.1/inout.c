@@ -47,3 +47,7 @@ int scrivi_su_file(matrice campo, int righe, int colonne){
     fclose(f);
     return 0;
 }
+
+int leggi_da_file(coordpila *lista_bombe, int* righe, int *colonne, int *bombe){
+    /*TO DO*/
+}

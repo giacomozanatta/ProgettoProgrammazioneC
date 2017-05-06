@@ -1,6 +1,7 @@
 #include "lib/gioco.h"
 #include "lib/campo.h"
 #include "lib/inout.h"
+#include "lib/listcoord.h"
 #include <stdio.h>
 /*new gioco: permette di creare un campo di gioco, di dimensione righe*colonne con bombe bombe
                 ritorna:    1 se c'è stato un errore (più bombe del previsto)
@@ -78,4 +79,10 @@ void marca(gioco* game){
 int salva_schema_su_file(gioco game){
     printf("SCRIVI SU FILE");
 	return scrivi_su_file(game.campo, game.righe, game.colonne);
+}
+
+int carica_gioco_da_file(gioco game){
+    coordpila* lista_bombe;
+    if(!leggi_da_file(lista_bombe, &(game.righe), &(game.colonne), &(game.bombe)))
+        return 1; /*problemi in lettura...*/
 }
