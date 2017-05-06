@@ -1,3 +1,6 @@
+#ifndef LISTCOORD_H
+#define LISTCOORD_H
+
 struct elem{
     int x;
     int y;
@@ -14,3 +17,5 @@ void inserisci_in_testa(coordpila* pila, int x, int y);
 
 int preleva_in_testa(coordpila* pila, elem* el);
 
+
+#endif

@@ -41,7 +41,7 @@ int main(){
             }while(scelta1<1 && scelta1>3);
             switch(scelta1){
                 case 1:
-                    //scrivi_su_file(game->
+                    salva_schema_su_file(game);
                 break;
 				case 2:
 					do{

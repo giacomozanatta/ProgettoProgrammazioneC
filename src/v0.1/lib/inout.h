@@ -1,3 +1,7 @@
-#include "listcoord.h"
+#ifndef INOUT_H
+#define INOUT_H
 
-//int scrivi_su_file(FILE* f, coordpila lista_bomba, int righe, int colonne);
+#include "campo.h"
+int scrivi_su_file(matrice campo, int righe, int colonne);
+
+#endif

@@ -1,6 +1,8 @@
 #ifndef GIOCO_H
 #define GIOCO_H
+
 #include "campo.h"
+#include "inout.h"
 struct gioco {
     /*gioco include: il campo, le celle scoperte, */
     matrice campo;
@@ -17,4 +19,5 @@ void stampa_gioco(gioco game);
 void stampa_gioco_scoperto(gioco game);
 int fai_mossa(gioco* game);
 void marca(gioco* game);
+int salva_schema_su_file(gioco game);
 #endif

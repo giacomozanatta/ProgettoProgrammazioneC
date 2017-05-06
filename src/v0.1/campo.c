@@ -9,7 +9,9 @@
 #define KNRM  "\x1B[0m"
 #define YEL   "\x1B[33m"
 #define CYN   "\x1B[36m"
-
+/**aggiorna post inserimento bomba: questa funzione aggiorna le celle limitrofe alla cella in cui c'è una bomba (incrementando di 1 se non sono bombe)
+	DA FARE: CONTROLLO BOMBA
+*/
 void aggiorna_post_inserimento_bomba(matrice* campo, int righe, int colonne,int rig, int col){
 	/*controllo adiacenti*/
 	int i, j;
@@ -21,6 +23,9 @@ void aggiorna_post_inserimento_bomba(matrice* campo, int righe, int colonne,int 
 						(*campo)[i][j].value++;
 		}
 }
+/**salva e inserisci bombe: mi salvo le bombe che inserisco su una lista, 
+	così vado meglio a gestire l'inserimento in un file (?)
+*/
 void salva_e_inserisci_bombe(matrice* campo, int righe, int colonne, int bombe, coordpila* coord_bombe){
 	printf("\n\tINSERISCO BOMBA...");
 	if(bombe>0){
@@ -38,6 +43,8 @@ void salva_e_inserisci_bombe(matrice* campo, int righe, int colonne, int bombe, 
 		salva_e_inserisci_bombe(campo, righe, colonne, bombe-1, coord_bombe);
 	}
 }
+/**inserisci bombe: inserisce bombe bombe nel campo in modo casuale, e aggiorna la posizione delle celle limitrofe
+*/
 void inserisci_bombe(matrice* campo, int righe, int colonne, int bombe){
 	printf("\n\tINSERISCO BOMBA...");
 	if(bombe>0){
@@ -54,7 +61,8 @@ void inserisci_bombe(matrice* campo, int righe, int colonne, int bombe){
 		inserisci_bombe(campo, righe, colonne, bombe-1);
 	}
 }
-
+/** inizializza campo: inizializza un campo[righe][colonne] vuoto
+*/
 void inizializza_campo(matrice* campo, int righe, int colonne){
 	int i, j;
     printf("\n\tINIZIALIZZO CAMPO...");
@@ -67,7 +75,8 @@ void inizializza_campo(matrice* campo, int righe, int colonne){
 	}
     printf("\tDONE.");
 }
-
+/**crea campo vuoto: allocca un campo in memoria dinamica, e lo inizializza a 0
+*/
 int crea_campo_vuoto(matrice* campo, int righe, int colonne){
 	int i;
 	printf("\n\tALLOCCO CAMPO...");
@@ -83,7 +92,11 @@ int crea_campo_vuoto(matrice* campo, int righe, int colonne){
 	inizializza_campo(campo, righe, colonne);
 	return 0; /*eseguito correttamente.*/
 }
-
+/**genera campo: permette di generare un campo: inizialmente crea un campo vuoto, poi inserisce le bombe.
+				valore di ritorno:	1 se ci sono troppe bombe
+									2 se c'è stato un errore di alloccazione della funzione crea campo vuoto
+									0 se è stata eseguita correttamente
+*/
 int genera_campo(matrice* campo, int righe, int colonne, int bombe){
     if(crea_campo_vuoto(campo, righe, colonne)==1)
        return 2; /*errore malloc*/
@@ -92,7 +105,8 @@ int genera_campo(matrice* campo, int righe, int colonne, int bombe){
     inserisci_bombe(campo, righe, colonne, bombe);
     return 0;
 }
-
+/**stampa campo scoperto: stampa il campo di gioco scoperto (senza controlli sulle celle coperte)
+*/
 void stampa_campo_scoperto(matrice campo, int righe, int colonne){
 	int i, j;
 	printf("\n\t");
@@ -106,7 +120,7 @@ void stampa_campo_scoperto(matrice campo, int righe, int colonne){
 			printf("\n\t");
 	}
 }
-
+/**stampa campo: stampo il campo di gioco*/
 void stampa_campo(matrice campo, int righe, int colonne){
 	int i, j;
 	printf("\n\t");
@@ -129,7 +143,10 @@ void stampa_campo(matrice campo, int righe, int colonne){
 	}
 }
 
-
+/**scopri cella aux:
+	CASO BASE: cella con valore non nullo
+	PASSO RICORSIVO: scopro la cella limitrofa alla cella corrente
+*/
 void scopri_cella_aux(matrice* campo, int righe, int colonne, int x, int y, int* celle_scoperte){
 	int i, j;
 	printf("%d, %d", (*campo)[x][y].scoperta, (*campo)[x][y].marcata);
@@ -148,6 +165,38 @@ void scopri_cella_aux(matrice* campo, int righe, int colonne, int x, int y, int*
 	}
 }
 
+
+/**scopri cella: permette di scoprire la cella in posizione x y
+	valore di ritorno: 	1 se la cella è marcata
+						2 se c'è un gameover
+						0 se la cella è stata scoperta correttamente
+	Se la cella ha valore 0, vengono scoperte le sue celle adiacenti 'a cascata'
+*/
+int scopri_cella(matrice* campo, int righe, int colonne, int x, int y, int* celle_scoperte){
+	if((*campo)[x][y].scoperta==1){
+		return 0;
+	}
+		/*se non è scoperta*/
+	else if((*campo)[x][y].marcata == 1){
+		return 1;
+	}
+	else if((*campo)[x][y].value == -1){
+		printf("\n\t[GAME OVER] bomba!\n");
+		(*campo)[x][y].scoperta=1;
+        (*celle_scoperte)++;
+        /*DA FARE: GESTIONE LISTA ULTIME MOSSE*/
+		return 2;
+	}
+	else
+		scopri_cella_aux(campo, righe, colonne, x, y, celle_scoperte);
+		printf("TORNO 1...");
+		return 0;
+}
+
+/**marca cella: marca o smarca una cella
+	valore di ritorno: 0 se posso marcarla/smarcarla
+						1 se la cella è già stata scoperta
+*/
 int marca_cella(matrice* campo, int righe, int colonne, int rig, int col){
 	matrice campoDe = *campo;
 	if(campoDe[rig][col].scoperta==0){
@@ -157,24 +206,4 @@ int marca_cella(matrice* campo, int righe, int colonne, int rig, int col){
 	}
 	else
 		return 1; /*cella già scoperta*/
-}
-int scopri_cella(matrice* campo, int righe, int colonne, int x, int y, int* celle_scoperte){
-	if((*campo)[x][y].scoperta==1){
-		return 0;
-	}
-		/*se non è scoperta*/
-	else if((*campo)[x][y].marcata == 1){
-		return -1;
-	}
-	else if((*campo)[x][y].value == -1){
-		printf("\n\t[GAME OVER] bomba!\n");
-		(*campo)[x][y].scoperta=1;
-        (*celle_scoperte)++;
-        /*DA FARE: GESTIONE LISTA ULTIME MOSSE*/
-		return -2;
-	}
-	else
-		scopri_cella_aux(campo, righe, colonne, x, y, celle_scoperte);
-		printf("TORNO 1...");
-		return 1;
 }

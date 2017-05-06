@@ -73,3 +73,9 @@ void marca(gioco* game){
     marca_cella(&(game->campo), game->righe, game->colonne, x, y);
 }
 
+/**salva_su_file: salva il gioco su un file
+*/
+int salva_schema_su_file(gioco game){
+    printf("SCRIVI SU FILE");
+	return scrivi_su_file(game.campo, game.righe, game.colonne);
+}
