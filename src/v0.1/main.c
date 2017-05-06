@@ -75,7 +75,47 @@ int main(){
 				}
 			break;
 		case 2:
-		
+			printf("\n\tLEGGO DA FILE");
+			carica_gioco_da_file(&game);
+			
+			printf("\n\tCAMPO CARICATO (COL: %d, RIG: %d, bombe: %d)! CHE VUOI FARE ORA?", game.colonne, game.righe, game.bombe);
+			printf("\n\t 1. GIOCA!");
+			printf("\n\t2. ESCI :(");
+			scanf("%d", &scelta1);
+			switch(scelta1){
+				case 1:
+					do{
+						do{
+							stampa_gioco(game);
+							printf("\n\t1. FAI MOSSA!");
+							printf("\n\t2. ANNULLA MOSSA!");
+							printf("\n\t3. MARCA/SMARCA CELLA!");
+							printf("\n\t4. ESCI :(");
+							printf("\n");
+							scanf("%d", &scelta2);
+						}while(scelta2<1 && scelta2>3);
+						switch(scelta2){
+							case 1:
+								x=fai_mossa(&game);
+							break;
+							case 2:
+								printf("\n\t[ANNULLA MOSSA] da fare!");
+							break;
+							case 3:
+								marca(&game);
+							break;
+							default:
+								x=-1;
+							break;
+						}
+					}while(x==0);
+				break;
+				case 2:
+					printf("SEE YOU SOON! :)");
+				break;
+				default:
+				break;
+			}
 		break;
 		default:
 		break;

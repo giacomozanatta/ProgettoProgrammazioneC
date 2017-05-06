@@ -20,5 +20,5 @@ void stampa_gioco_scoperto(gioco game);
 int fai_mossa(gioco* game);
 void marca(gioco* game);
 int salva_schema_su_file(gioco game);
-int carica_gioco_da_file(gioco game);
+int carica_gioco_da_file(gioco* game);
 #endif

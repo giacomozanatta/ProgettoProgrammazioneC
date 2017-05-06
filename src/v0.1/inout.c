@@ -50,4 +50,29 @@ int scrivi_su_file(matrice campo, int righe, int colonne){
 
 int leggi_da_file(coordpila *lista_bombe, int* righe, int *colonne, int *bombe){
     /*TO DO*/
+    FILE *f;
+    char* nome_file;
+    size_t len=0;
+    int x=0, y=0;
+    char test[100];
+    (*bombe) = 0;
+    do{
+        do{
+            printf("\n\tINSERISCI NOME FILE:");
+            getline(&nome_file, &len, stdin);
+        }while(len==0);
+    }while(!file_gia_esistente(nome_file));
+    /*se sono qui, il file esiste. Allora lo leggo*/
+    /*si assume che il file sia corretto.*/
+    f=fopen(nome_file, "r");
+    fscanf(f, "%d,", righe);
+    fscanf(f, "%d", colonne);
+    while(!feof(f)){
+        fscanf(f, "%d,", &x);
+        fscanf(f, "%d\n", &y);
+        inserisci_in_testa(lista_bombe, x, y);
+        (*bombe)++;
+    }
+    fclose(f);
+    return 0;
 }

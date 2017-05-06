@@ -8,6 +8,21 @@
                             2 se c'è stato un problema di alloccamento
                             0 se è andato tutto bene                
 */
+int new_gioco_da_lista(gioco *game, int righe, int colonne, coordpila* lista_bombe){
+    elem coord_bomb;
+    /*inizializzo game*/
+    game->righe=righe;
+    game->colonne=colonne;
+    game->bombe=0;
+    game->celle_scoperte=0;
+    crea_campo_vuoto(&(game->campo), righe, colonne);
+    while((*lista_bombe)){
+        /*finchè ho bombe*/
+        preleva_in_testa(lista_bombe, &coord_bomb);
+        inserisci_una_bomba(&(game->campo), game->righe, game->colonne, coord_bomb.x, coord_bomb.y);
+        (game->bombe) = game->bombe+1;
+    }
+}
 int new_gioco(gioco *game, int righe, int colonne, int bombe){
     if(bombe>=righe*colonne){
         return 1;
@@ -81,8 +96,16 @@ int salva_schema_su_file(gioco game){
 	return scrivi_su_file(game.campo, game.righe, game.colonne);
 }
 
-int carica_gioco_da_file(gioco game){
-    coordpila* lista_bombe;
-    if(!leggi_da_file(lista_bombe, &(game.righe), &(game.colonne), &(game.bombe)))
+int carica_gioco_da_file(gioco* game){
+    int i=0;
+    elem coord;
+    int righe, colonne, bombe;
+    coordpila lista_bombe=NULL;
+    if(leggi_da_file(&lista_bombe, &righe, &colonne, &bombe)!=0)
         return 1; /*problemi in lettura...*/
+    /*ok, ho letto da file. su lista_bombe dovrei avere la lista delle bombe lette.*/
+    printf("%d %d %d", righe, colonne, bombe);
+    new_gioco_da_lista(game, righe, colonne, &lista_bombe);
+    printf("%d", game->bombe);
+    return 0;
 }
