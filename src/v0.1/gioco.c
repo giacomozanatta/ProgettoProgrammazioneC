@@ -105,6 +105,7 @@ int carica_gioco_da_file(gioco* game){
         return 1; /*problemi in lettura...*/
     /*ok, ho letto da file. su lista_bombe dovrei avere la lista delle bombe lette.*/
     printf("%d %d %d", righe, colonne, bombe);
+    printf("\n\t%d\n", lista_bombe->coord.x);
     new_gioco_da_lista(game, righe, colonne, &lista_bombe);
     printf("%d", game->bombe);
     return 0;
