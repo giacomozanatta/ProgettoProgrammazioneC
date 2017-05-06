@@ -2,6 +2,11 @@
 #include "lib/campo.h"
 #include "lib/inout.h"
 #include <stdio.h>
+/*new gioco: permette di creare un campo di gioco, di dimensione righe*colonne con bombe bombe
+                ritorna:    1 se c'è stato un errore (più bombe del previsto)
+                            2 se c'è stato un problema di alloccamento
+                            0 se è andato tutto bene                
+*/
 int new_gioco(gioco *game, int righe, int colonne, int bombe){
     if(bombe>=righe*colonne){
         return 1;
@@ -21,7 +26,12 @@ void stampa_gioco_scoperto(gioco game){
     stampa_campo_scoperto(game.campo, game.righe, game.colonne);
     printf("\n\n\tCELLE SCOPERTE: %d\n", game.celle_scoperte);
 }
-
+/*fai mossa: permette di fare una mossa nel campo di gioco, ossia scoprire una cella
+                Questa funzione ritorna: 0 se è andata a buon fine o la cella è già stata scoperta o è marcata
+                                            1 se il giocatore ha perso
+                                            2 se il giocatore ha vinto
+                MANCANO CONTROLLI SU X e Y
+*/
 int fai_mossa(gioco* game){
     int x, y, status;
     printf("\n\tINSERISCI X");
@@ -50,6 +60,10 @@ int fai_mossa(gioco* game){
             return 0;
     }
 }
+/*marca : prende due posizioni X e Y, se la cella in posizione x y è marcata la smarca.
+            Se non è marcata, la marca.
+            MANCANO CONTROLLI SU X e Y
+*/
 void marca(gioco* game){
     int x, y;
     printf("\n\tINSERISCI X");
@@ -58,3 +72,4 @@ void marca(gioco* game){
     scanf("%d", &y);
     marca_cella(&(game->campo), game->righe, game->colonne, x, y);
 }
+
