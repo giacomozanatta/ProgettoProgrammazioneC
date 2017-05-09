@@ -2,8 +2,8 @@
 #define LISTCOORD_H
 
 struct elem{
-    int x;
-    int y;
+    int riga;
+    int colonna;
 };
 typedef struct elem elem;
 
@@ -13,8 +13,9 @@ struct coordpila{
 };
 typedef struct coordpila* coordpila;
 
-int inserisci_in_testa(coordpila* pila, int x, int y);
+int inserisci_in_testa(coordpila* pila, int riga, int colonna);
 int preleva_in_testa(coordpila* pila, elem* el);
-
+void rimuovi_lista(coordpila* pila);
+void stampa_lista(coordpila pila);
 
 #endif

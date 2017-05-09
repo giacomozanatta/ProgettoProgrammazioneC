@@ -3,9 +3,11 @@
 
 #include "campo.h"
 #include "inout.h"
+#include "mosse.h"
 struct gioco {
     /*gioco include: il campo, le celle scoperte, */
     matrice campo;
+    mosse moves;
     int celle_scoperte; /*controllo per vincere*/
     int righe; /*numero di righe della matrice*/
     int colonne; /*numero di colonne della matrice*/
@@ -14,11 +16,13 @@ struct gioco {
 };
 typedef struct gioco gioco;
 
-int new_gioco(gioco * game, int righe, int colonne, int bombe);
+int new_gioco(gioco * game, int righe, int colonne, int bombe, int annullamenti);
 void stampa_gioco(gioco game);
 void stampa_gioco_scoperto(gioco game);
 int fai_mossa(gioco* game);
 void marca(gioco* game);
 int salva_schema_su_file(gioco game);
 int carica_gioco_da_file(gioco* game);
+void annulla(gioco *game);
+int gioca();
 #endif

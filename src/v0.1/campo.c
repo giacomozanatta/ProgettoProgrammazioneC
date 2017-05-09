@@ -10,7 +10,7 @@
 #define YEL   "\x1B[33m"
 #define CYN   "\x1B[36m"
 /**aggiorna post inserimento bomba: questa funzione aggiorna le celle limitrofe alla cella in cui c'è una bomba (incrementando di 1 se non sono bombe)
-	DA FARE: CONTROLLO BOMBA
+	OK
 */
 void aggiorna_post_inserimento_bomba(matrice* campo, int righe, int colonne,int rig, int col){
 	/*controllo adiacenti*/
@@ -23,41 +23,19 @@ void aggiorna_post_inserimento_bomba(matrice* campo, int righe, int colonne,int 
 						(*campo)[i][j].value++;
 		}
 }
-/**salva e inserisci bombe: mi salvo le bombe che inserisco su una lista, 
-	così vado meglio a gestire l'inserimento in un file (?)
-*/
-void salva_e_inserisci_bombe(matrice* campo, int righe, int colonne, int bombe, coordpila* coord_bombe){
-	printf("\n\tINSERISCO BOMBA...");
-	if(bombe>0){
-        int x, y;
-		do{
-			/*creo due numeri casuali, x e y...*/
-			x = rand() % (righe);
-			y = rand() % (colonne);
-		}while((*campo)[x][y].value==-1);
-		/*ho beccato una cella che non contiene una bomba... aggiorno celle limitrofe*/
-		(*campo)[x][y].value = -1;
-		inserisci_in_testa(coord_bombe, x, y);
-		aggiorna_post_inserimento_bomba(campo, righe, colonne, x, y);
-		printf("\tDONE.");
-		salva_e_inserisci_bombe(campo, righe, colonne, bombe-1, coord_bombe);
-	}
-}
+
 /**inserisci bombe: inserisce bombe bombe nel campo in modo casuale, e aggiorna la posizione delle celle limitrofe
 */
 void inserisci_bombe(matrice* campo, int righe, int colonne, int bombe){
-	printf("\n\tINSERISCO BOMBA...");
 	if(bombe>0){
-        int x, y;
+        int rig, col;
 		do{
 			/*creo due numeri casuali, x e y...*/
-			x = rand() % (righe);
-			y = rand() % (colonne);
-		}while((*campo)[x][y].value==-1);
+			rig = rand() % (righe);
+			col = rand() % (colonne);
+		}while((*campo)[rig][col].value==-1);
 		/*ho beccato una cella che non contiene una bomba... aggiorno celle limitrofe*/
-		(*campo)[x][y].value = -1;
-		aggiorna_post_inserimento_bomba(campo, righe, colonne, x, y);
-		printf("\tDONE.");
+		inserisci_una_bomba(campo, righe, colonne, rig, col);
 		inserisci_bombe(campo, righe, colonne, bombe-1);
 	}
 }
@@ -66,10 +44,11 @@ void inserisci_bombe(matrice* campo, int righe, int colonne, int bombe){
 	2 se c'è già una bomba'
 	0 se è stata inserita
 */
-int inserisci_una_bomba(matrice* campo, int righe, int colonne, int x, int y){
-	printf("%d", x);
-    (*campo)[x][y].value=-1;
-	aggiorna_post_inserimento_bomba(campo, righe, colonne, x, y);
+int inserisci_una_bomba(matrice* campo, int righe, int colonne, int rig, int col){
+	printf("\n\tINSERISCO BOMBA...");
+    (*campo)[rig][col].value=-1;
+	aggiorna_post_inserimento_bomba(campo, righe, colonne, rig, col);
+	printf("OK!");
     return 0; /*inserita correttamente*/
 }
 /** inizializza campo: inizializza un campo[righe][colonne] vuoto
@@ -84,9 +63,10 @@ void inizializza_campo(matrice* campo, int righe, int colonne){
 			(*campo)[i][j].scoperta = 0;
 		}
 	}
-    printf("\tDONE.");
+    printf("\tOK!");
 }
 /**crea campo vuoto: allocca un campo in memoria dinamica, e lo inizializza a 0
+OK
 */
 int crea_campo_vuoto(matrice* campo, int righe, int colonne){
 	int i;
@@ -99,7 +79,7 @@ int crea_campo_vuoto(matrice* campo, int righe, int colonne){
 		if(! ((*campo)[i]))
 			return 1; /*errore*/
 	}
-	printf("\tDONE.");
+	printf("\tOK!. ");
 	inizializza_campo(campo, righe, colonne);
 	return 0; /*eseguito correttamente.*/
 }
@@ -110,9 +90,9 @@ int crea_campo_vuoto(matrice* campo, int righe, int colonne){
 */
 int genera_campo(matrice* campo, int righe, int colonne, int bombe){
     if(crea_campo_vuoto(campo, righe, colonne)==1)
-       return 2; /*errore malloc*/
+       return 1; /*errore malloc*/
     if(bombe>=righe*colonne)
-            return 1; /*troppe bombe*/
+            return 2; /*troppe bombe*/
     inserisci_bombe(campo, righe, colonne, bombe);
     return 0;
 }
@@ -137,7 +117,7 @@ void stampa_campo(matrice campo, int righe, int colonne){
 	printf("\n\t");
 	for(i=0; i<righe; i++){
 		for (j = 0; j < colonne; j++) {
-			if (campo[i][j].scoperta == 1 && campo[i][j].value != -1){ /*è scoperta*/
+			if (campo[i][j].scoperta > 0 && campo[i][j].value != -1){ /*è scoperta*/
 				if(campo[i][j].value>0)
 					printf("%s%d%s ", YEL,campo[i][j].value, KNRM);
 				else
@@ -158,19 +138,26 @@ void stampa_campo(matrice campo, int righe, int colonne){
 	CASO BASE: cella con valore non nullo
 	PASSO RICORSIVO: scopro la cella limitrofa alla cella corrente
 */
-void scopri_cella_aux(matrice* campo, int righe, int colonne, int x, int y, int* celle_scoperte){
+void scopri_cella_aux(matrice* campo, int righe, int colonne, int rig, int col, int* celle_scoperte){
 	int i, j;
-	if((*campo)[x][y].scoperta==0 && (*campo)[x][y].marcata == 0){ /*se non l'ho già scoperta...*/
-		(*campo)[x][y].scoperta=1; /*scopro.*/
-        (*celle_scoperte)++;
-		if((*campo)[x][y].value==0){ /*se è nulla, allora */
-			for(i = x-1; i<=x+1; i++)
-				for(j = y-1; j<=y+1; j++){
+	if((*campo)[rig][col].marcata == 0){ /*se non è marcata...*/
+		if((*campo)[rig][col].scoperta == 0 ){ /*e se non è stata scoperta...*/
+			(*campo)[rig][col].scoperta++;
+			/*se non è stata scoperta*/
+			(*celle_scoperte)++;
+			if((*campo)[rig][col].value==0){ /*se è nulla, allora */
+				for(i = rig-1; i<=rig+1; i++)
+					for(j = col-1; j<=col+1; j++){
 						/*controllo se sono posizioni corrette [DA OTTIMIZZARE]*/
 						if(i>=0 && i<righe && j>=0 && j<colonne)
 							scopri_cella_aux(campo, righe, colonne, i, j, celle_scoperte);
 				}
+			}
 		}
+		else if((*campo)[rig][col].value>0)
+			(*campo)[rig][col].scoperta++;
+		/*se è già stata scoperta, la 'riscopro'*/
+			
 	}
 }
 
@@ -181,25 +168,49 @@ void scopri_cella_aux(matrice* campo, int righe, int colonne, int x, int y, int*
 						0 se la cella è stata scoperta correttamente
 	Se la cella ha valore 0, vengono scoperte le sue celle adiacenti 'a cascata'
 */
-int scopri_cella(matrice* campo, int righe, int colonne, int x, int y, int* celle_scoperte){
-	if((*campo)[x][y].scoperta==1){
-		return 0;
+int scopri_cella(matrice* campo, int righe, int colonne, int rig, int col, int* celle_scoperte){
+	if((*campo)[rig][col].scoperta!=0){
+		return 3; /*3 -> codice già scoperta*/ 
 	}
-		/*se non è scoperta*/
-	else if((*campo)[x][y].marcata == 1){
-		return 1;
+	/*se non è scoperta*/
+	else if((*campo)[rig][col].marcata == 1){
+		return 1; /*1 -> codice marcata*/
 	}
-	else if((*campo)[x][y].value == -1){
+	else if((*campo)[rig][col].value == -1){
 		printf("\n\t[GAME OVER] bomba!\n");
-		(*campo)[x][y].scoperta=1;
+		(*campo)[rig][col].scoperta++;
         (*celle_scoperte)++;
-        /*DA FARE: GESTIONE LISTA ULTIME MOSSE*/
-		return 2;
+		return 2; /*2 -> codice bomba*/
 	}
 	else
-		scopri_cella_aux(campo, righe, colonne, x, y, celle_scoperte);
-		printf("TORNO 1...");
-		return 0;
+		scopri_cella_aux(campo, righe, colonne, rig, col, celle_scoperte);
+	return 0; /*0 -> codice OK */
+}
+
+void annulla_mossa(matrice* campo, int righe, int colonne, int rig, int col, int* celle_scoperte){
+	int i, j;
+	if((*campo)[rig][col].marcata == 0){ /*se non è marcata...*/
+		if((*campo)[rig][col].scoperta == 1){
+			(*campo)[rig][col].scoperta--;
+			/*se non è stata scoperta*/
+			(*celle_scoperte)--;
+			if((*campo)[rig][col].value==0){ /*se è nulla, allora */
+				for(i = rig-1; i<=rig+1; i++)
+					for(j = col-1; j<=col+1; j++){
+						/*controllo se sono posizioni corrette [DA OTTIMIZZARE]*/
+						if(i>=0 && i<righe && j>=0 && j<colonne)
+							annulla_mossa(campo, righe, colonne, i, j, celle_scoperte);
+				}
+			}
+		}
+		else if((*campo)[rig][col].scoperta>0){
+			(*campo)[rig][col].scoperta--;
+			if((*campo)[rig][col].scoperta==0)
+				(*celle_scoperte)--;
+		}
+		/*se è già stata scoperta, la 'ricopro'*/
+			
+	}
 }
 
 /**marca cella: marca o smarca una cella
@@ -207,10 +218,9 @@ int scopri_cella(matrice* campo, int righe, int colonne, int x, int y, int* cell
 						1 se la cella è già stata scoperta
 */
 int marca_cella(matrice* campo, int righe, int colonne, int rig, int col){
-	matrice campoDe = *campo;
-	if(campoDe[rig][col].scoperta==0){
+	if((*campo)[rig][col].scoperta==0){
 		/*se non è scoperta*/
-		campoDe[rig][col].marcata= !campoDe[rig][col].marcata;
+		(*campo)[rig][col].marcata= !(*campo)[rig][col].marcata;
 		return 0;
 	}
 	else

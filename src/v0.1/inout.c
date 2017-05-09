@@ -54,7 +54,6 @@ int leggi_da_file(coordpila *lista_bombe, int* righe, int *colonne, int *bombe){
     char* nome_file;
     size_t len=0;
     int x=0, y=0;
-    char test[100];
     (*bombe) = 0;
     do{
         do{
