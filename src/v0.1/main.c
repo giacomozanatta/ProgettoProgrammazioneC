@@ -4,4 +4,5 @@
 int main(){
 	srand(time(NULL));
 	gioca();
+	return 0;
 }
