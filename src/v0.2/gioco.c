@@ -39,7 +39,8 @@ int new_gioco(gioco *game, int righe, int colonne, int bombe, int max_mosse){
 }
 void stampa_gioco(gioco game){
     stampa_campo(game.campo, game.righe, game.colonne);
-    printf("\n\n\tCELLE SCOPERTE: %d\n", game.celle_scoperte);
+    printf("\n\n\t\tCELLE SCOPERTE: %d", game.celle_scoperte);
+    printf("\n\t\tANNULLAMENTI RIMASTI: %d\n\n", (game.moves.max_mosse - game.moves.mosse_da_annullare)+1);
 }
 void stampa_gioco_scoperto(gioco game){
     stampa_campo_scoperto(game.campo, game.righe, game.colonne);
@@ -133,6 +134,7 @@ int inizia_partita(gioco* game){
             case 1:
                 ret_value=fai_mossa(game);
                 if(ret_value==2){
+                    system("clear");
                     printf("\n\t\tBECCATA BOMBA!");
                     if(game->moves.mosse_da_annullare > game->moves.max_mosse){
                         printf("\n\tGAME OVER... :(");
@@ -140,6 +142,7 @@ int inizia_partita(gioco* game){
                     }
                     else{
                         do{
+                            stampa_gioco(*game);
                             printf("\n\t1. ANNULLA MOSSE!");
                             printf("\n\t2. ESCI");
                             printf("\n\t -> ");
@@ -163,7 +166,7 @@ int inizia_partita(gioco* game){
                 if((game->righe * game->colonne) - game->bombe==game->celle_scoperte){
                     system("clear");
                     stampa_gioco(*game);
-                    printf("\n\tCOMPLIMENTI! HAI VINTO!");
+                    printf("\n\tCOMPLIMENTI! HAI VINTO!\n\n");
                     esci=1;
                 }
             break;
@@ -190,6 +193,7 @@ int nuovo_gioco(){
             printf("\n\t\t NUOVO GIOCO! ");
             printf("\n\t1. GENERA CAMPO");
             printf("\n\t2. CARICA DA FILE");
+            printf("\n\tESCI :( ");
             printf("\n\t -> ");
             scanf("%d", &input);
         }while(input<1 && input>2);
@@ -198,30 +202,30 @@ int nuovo_gioco(){
                 system("clear");
                 printf("\n\t\t GENERA CAMPO! ");
                 do{
-                    printf("\n\tINSERISCI COLONNE -> ");
+                    printf("\n\tINSERISCI COLONNE\n\t-> ");
                     scanf("%d", &colonne);
                 }while(colonne<2);
                 do{
-                    printf("\n\tISNERISCI RIGHE -> ");
+                    printf("\n\tISNERISCI RIGHE\n\t-> ");
                     scanf("%d", &righe);
                 }while(righe<2);
                 do{
-                    printf("\n\tINSERISCI BOMBE -> ");
+                    printf("\n\tINSERISCI BOMBE\n\t-> ");
                     scanf("%d", &bombe);
                     if(bombe>=righe*colonne)
                         printf("\n\t[ERR] TROPPE BOMBE :(");
                 }while(bombe>=righe*colonne || bombe<0);
                 do{
-                    printf("\n\tINSERISCI NUMERO MASSIMO DI ANNULLAMENTI -> ");
+                    printf("\n\tINSERISCI NUMERO MASSIMO DI ANNULLAMENTI\n\t-> ");
                     scanf("%d", &annullamenti);
                 }while(annullamenti<0);
                 if(new_gioco(&game, righe, colonne, bombe, annullamenti)==1)
                     printf("\n\tERRORE CREAZIONE NUOVO CAMPO :(");
                 else{
                     /*GIOCO.*/
-                    do{
+                    do{ 
                         system("clear");
-                        printf("\n\t SCHEMA GENERATO!");
+                        printf("\n\t SCHEMA GENERATO! (DIFFICOLTÀ: %f)", (float)(game.bombe)/(float)(game.colonne*game.righe));
                         printf("\n\t1. GIOCA");
                         printf("\n\t2. SALVA SCHEMA SU FILE");
                         printf("\n\t3. ESCI");

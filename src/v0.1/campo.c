@@ -116,22 +116,29 @@ void stampa_campo(matrice campo, int righe, int colonne){
 	int i, j;
 	printf("\n\t");
 	for(i=0; i<righe; i++){
+		printf("*");
+		for(j=0; j < colonne; j++)
+			printf("****");
+		printf("\n\t| ");
 		for (j = 0; j < colonne; j++) {
 			if (campo[i][j].scoperta > 0 && campo[i][j].value != -1){ /*è scoperta*/
 				if(campo[i][j].value>0)
-					printf("%s%d%s ", YEL,campo[i][j].value, KNRM);
+					printf("%s%d%s | ", YEL,campo[i][j].value, KNRM);
 				else
-					printf("%d ", campo[i][j].value);
+					printf("%d | ", campo[i][j].value);
 			}
 			else if(campo[i][j].marcata == 1) /*è marcata*/
-				printf("%s$%s ", CYN, KNRM);
+				printf("%s$%s | ", CYN, KNRM);
 			else if(campo[i][j].scoperta == 1 && campo[i][j].value == -1)
-				printf("%sB%s ", KRED, KNRM);
+				printf("%sB%s | ", KRED, KNRM);
 			else
-				printf("%s#%s ", KBLU, KNRM);
+				printf("%s#%s | ", KBLU, KNRM);
 		}
 			printf("\n\t");
 	}
+	printf("*");
+	for(j=0; j < colonne; j++)
+			printf("****");
 }
 
 /**scopri cella aux:
@@ -177,7 +184,6 @@ int scopri_cella(matrice* campo, int righe, int colonne, int rig, int col, int* 
 		return 1; /*1 -> codice marcata*/
 	}
 	else if((*campo)[rig][col].value == -1){
-		printf("\n\t[GAME OVER] bomba!\n");
 		(*campo)[rig][col].scoperta++;
         (*celle_scoperte)++;
 		return 2; /*2 -> codice bomba*/
