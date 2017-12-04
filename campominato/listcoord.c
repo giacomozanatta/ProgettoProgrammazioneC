@@ -1,7 +1,7 @@
 #include "lib/listcoord.h"
 #include <stdlib.h>
 #include <stdio.h>
-
+/*inserisci in testa: inserisce in testa alla lista le coordinate*/
 int inserisci_in_testa(coordpila* pila, int riga, int colonna){
     coordpila nuova_testa=(coordpila)malloc(sizeof(struct coordpila));
     if(nuova_testa){
@@ -14,7 +14,7 @@ int inserisci_in_testa(coordpila* pila, int riga, int colonna){
     else
         return 0;
 }
-
+/*preleva in testa: preleva dalla testa le coordinate*/
 int preleva_in_testa(coordpila* pila, elem* el){
     coordpila del;
     if(!(*pila))
@@ -23,7 +23,7 @@ int preleva_in_testa(coordpila* pila, elem* el){
     (*el).riga=(*pila)->coord.riga;
     (*el).colonna=(*pila)->coord.colonna;
     del = (*pila);
-    *pila = (*pila)->next;
+    *pila = (*pila)->next; /*setto la testa*/
     free(del); /*libero la memoria dinamica*/
     return 0;
 }
@@ -34,10 +34,10 @@ void stampa_lista(coordpila pila){
         stampa_lista(pila->next);
     }
 }
-
+/*rimuovi lista: rimuovo la lista*/
 void rimuovi_lista(coordpila* pila){
-    if(pila){
-        rimuovi_lista(&(*pila)->next);
+    if(*pila){
+        rimuovi_lista(&((*pila)->next));
         free(pila);
     }
 }

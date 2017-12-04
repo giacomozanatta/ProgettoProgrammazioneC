@@ -1,4 +1,3 @@
-//test
 #include "lib/campo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +16,7 @@ void aggiorna_post_inserimento_bomba(matrice* campo, int righe, int colonne,int 
 	int i, j;
 	for(i = rig-1; i<=rig+1; i++)
 		for(j = col-1; j<=col+1; j++){
-				/*controllo se sono posizioni corrette [DA OTTIMIZZARE]*/
+				/*controllo se sono posizioni corrette */
 				if(i>=0 && i<righe && j>=0 && j<colonne)
 					if((*campo)[i][j].value!=-1)
 						(*campo)[i][j].value++;
@@ -69,15 +68,18 @@ void inizializza_campo(matrice* campo, int righe, int colonne){
 OK
 */
 int crea_campo_vuoto(matrice* campo, int righe, int colonne){
-	int i;
+	int i, j;
 	printf("\n\tALLOCCO CAMPO...");
 	*campo = (matrice) malloc(sizeof(cella*)*righe);
 	if(! (*campo))
 		return 1;
 	for(i=0; i<righe; i++){
 		(*campo)[i] = (cella*) malloc(sizeof(cella)*colonne);
-		if(! ((*campo)[i]))
+		if(! ((*campo)[i])){
+			for(j=0; j<i; j++)
+				free((*campo)[j]);
 			return 1; /*errore*/
+		}
 	}
 	printf("\tOK!. ");
 	inizializza_campo(campo, righe, colonne);
@@ -102,14 +104,21 @@ void stampa_campo_scoperto(matrice campo, int righe, int colonne){
 	int i, j;
 	printf("\n\t");
 	for(i=0; i<righe; i++){
+		printf("*");
+		for(j=0; j < colonne; j++)
+			printf("****");
+		printf("\n\t| ");
 		for (j = 0; j < colonne; j++) {
 			if (campo[i][j].value == -1)
-				printf("%sB%s ", KRED, KNRM);
+				printf("%sB%s | ", KRED, KNRM);
 			else
-				printf("%d ", campo[i][j].value);
+				printf("%d | ", campo[i][j].value);
 		}
 			printf("\n\t");
 	}
+	printf("*");
+	for(j=0; j < colonne; j++)
+			printf("****");
 }
 /**stampa campo: stampo il campo di gioco*/
 void stampa_campo(matrice campo, int righe, int colonne){
@@ -200,10 +209,10 @@ void annulla_mossa(matrice* campo, int righe, int colonne, int rig, int col, int
 			(*campo)[rig][col].scoperta--;
 			/*se non è stata scoperta*/
 			(*celle_scoperte)--;
-			if((*campo)[rig][col].value==0){ /*se è nulla, allora */
+			if((*campo)[rig][col].value==0){ /*se è nulla, allora copri le mosse limitrofe*/
 				for(i = rig-1; i<=rig+1; i++)
 					for(j = col-1; j<=col+1; j++){
-						/*controllo se sono posizioni corrette [DA OTTIMIZZARE]*/
+						/*controllo se sono posizioni corrette*/
 						if(i>=0 && i<righe && j>=0 && j<colonne)
 							annulla_mossa(campo, righe, colonne, i, j, celle_scoperte);
 				}

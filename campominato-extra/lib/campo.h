@@ -16,6 +16,6 @@ int scopri_cella(matrice* campo, int righe, int colonne, int x, int y, int* cell
 int marca_cella(matrice* campo, int righe, int colonne, int rig, int col);
 int inserisci_una_bomba(matrice* campo, int righe, int colonne, int x, int y);
 int crea_campo_vuoto(matrice* campo, int righe, int colonne);
-void annulla_mossa(matrice* campo, int righe, int colonne, int x, int y, int* celle_scoperte);
+void annulla_mossa(matrice* campo, int righe, int colonne, int rig, int col, int* celle_scoperte);
 void stampa_matrice_boh(matrice campo, int righe, int colonne);
 #endif
